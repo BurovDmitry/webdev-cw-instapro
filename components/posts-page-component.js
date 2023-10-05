@@ -1,6 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
+import { getTimeDistance } from "../helpers/get-time-distance.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   // TODO: реализовать рендер постов из api
@@ -11,15 +12,15 @@ export function renderPostsPageComponent({ appEl, posts }) {
    * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
    */
 
-  
+
   const postsHtml = posts.map((post) => {
     return `<li class="post">
-  <div class="post-header" data-user-id="642d00329b190443860c2f31">
-      <img src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg" class="post-header__user-image">
-      <p class="post-header__user-name">Иван Иваныч</p>
+  <div class="post-header" data-user-id="${post.user.id}">
+      <img src="${post.user.imageUrl}" class="post-header__user-image">
+      <p class="post-header__user-name">${post.user.name}</p>
   </div>
   <div class="post-image-container">
-    <img class="post-image" src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg">
+    <img class="post-image" src="${post.imageUrl}">
   </div>
   <div class="post-likes">
     <button data-post-id="642d00579b190443860c2f32" class="like-button">
@@ -30,15 +31,14 @@ export function renderPostsPageComponent({ appEl, posts }) {
     </p>
   </div>
   <p class="post-text">
-    <span class="user-name">Иван Иваныч</span>
-    Ромашка, ромашка...
+    <span class="user-name">${post.user.name}</span>
+    ${post.description}
   </p>
   <p class="post-date">
-    19 минут назад
+    ${getTimeDistance(date)}
   </p>
 </li>`})
-.join('')
-
+    .join('')
 
   const appHtml = `
               <div class="page-container">

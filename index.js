@@ -10,6 +10,7 @@ import {
 } from "./routes.js";
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
+import { renderUserPostsPageComponent } from './components/user-posts-page-component.js';
 import {
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
@@ -72,13 +73,13 @@ export const goToPage = (newPage, data) => {
 
       return getUserPosts({ token: getToken(), userId: data.userId })
         .then((newPosts) => {
-          page = POSTS_PAGE;
+          page = USER_POSTS_PAGE;
           posts = newPosts;
           renderApp();
         })
         .catch((error) => {
           console.error(error);
-          goToPage(POSTS_PAGE);
+          goToPage(USER_POSTS_PAGE);
         });
 
       // TODO: реализовать получение постов юзера из API
@@ -126,7 +127,7 @@ const renderApp = () => {
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
         console.log("Добавляю пост...", { description, imageUrl });
-        return addPost(getToken(), {description, imageUrl}).then(
+        return addPost(getToken(), { description, imageUrl }).then(
           () => {
             goToPage(POSTS_PAGE);
           }
@@ -144,6 +145,7 @@ const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
+    console.log(123)
     // TODO: реализовать страницу фотографию пользвателя
     return renderUserPostsPageComponent({
       appEl,
