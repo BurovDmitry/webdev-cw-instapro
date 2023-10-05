@@ -1,4 +1,4 @@
-import { addPost, getPosts, getUserPosts } from "./api.js";
+import { addPost, dislikePost, getPosts, getUserPosts, likePost } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -81,12 +81,6 @@ export const goToPage = (newPage, data) => {
           console.error(error);
           goToPage(USER_POSTS_PAGE);
         });
-
-      // TODO: реализовать получение постов юзера из API
-      // console.log("Открываю страницу пользователя: ", data.userId);
-      // page = USER_POSTS_PAGE;
-      // posts = [];
-      // return renderApp();
     }
 
     page = newPage;
@@ -125,14 +119,12 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
         return addPost(getToken(), { description, imageUrl }).then(
           () => {
             goToPage(POSTS_PAGE);
           }
         );
-      },
+      }
     });
   }
 
@@ -140,15 +132,24 @@ const renderApp = () => {
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
-      posts
+      onLikePostClick({ postId }) {
+        return likePost(getToken(), { postId });
+      },
+      onDislikePostClick({ postId }) {
+        return dislikePost(getToken(), { postId });
+      },
     });
   }
 
   if (page === USER_POSTS_PAGE) {
-    console.log(123)
-    // TODO: реализовать страницу фотографию пользвателя
     return renderUserPostsPageComponent({
       appEl,
+      onLikePostClick({ postId }) {
+        return likePost(getToken(), { postId });
+      },
+      onDislikePostClick({ postId }) {
+        return dislikePost(getToken(), { postId });
+      },
     });
   }
 };

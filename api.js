@@ -116,3 +116,25 @@ export function addPost(token, data) {
     return response.json();
   });
 }
+
+export function likePost(token, data) {
+  return fetch(postsHost + `/${data.postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+export function dislikePost(token, data) {
+  return fetch(postsHost + `/${data.postId}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
