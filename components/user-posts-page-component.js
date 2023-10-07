@@ -1,16 +1,8 @@
 import { USER_POSTS_PAGE } from "../routes.js";
-import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, user } from "../index.js";
 import { mapPosts } from "../helpers/map-posts.js";
 
 export function renderUserPostsPageComponent({ appEl, onLikePostClick, onDislikePostClick }) {
-  // TODO: реализовать рендер постов из api
-  console.log("Актуальный список постов:", posts);
-
-  /**
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
 
   function render() {
     const mappedPost = mapPosts(posts)
@@ -49,10 +41,6 @@ export function renderUserPostsPageComponent({ appEl, onLikePostClick, onDislike
 
     console.log(user);
     appEl.innerHTML = appHtml;
-
-    renderHeaderComponent({
-      element: document.querySelector(".header-container"),
-    });
 
     for (let userEl of document.querySelectorAll(".post-header")) {
       userEl.addEventListener("click", () => {

@@ -1,5 +1,3 @@
-import { renderHeaderComponent } from "./header-component.js";
-
 export function renderLoadingPageComponent({ appEl, user, goToPage }) {
   const appHtml = `
               <div class="page-container">
@@ -10,10 +8,4 @@ export function renderLoadingPageComponent({ appEl, user, goToPage }) {
               </div>`;
 
   appEl.innerHTML = appHtml;
-
-  renderHeaderComponent({
-    user,
-    element: document.querySelector(".header-container"),
-    goToPage,
-  });
 }

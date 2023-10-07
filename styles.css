@@ -1,3 +1,7 @@
+#app {
+margin-top: 140px;
+}
+
 .page-container {
   padding: 0 20px;
 }
@@ -10,6 +14,10 @@
   padding: 20px 16px;
   margin-left: -20px;
   margin-right: -20px;
+  position: fixed;
+  width: calc(100% - 30px);
+  top: 0;
+  background: white;
 }
 
 .logo {
@@ -195,4 +203,35 @@
   box-sizing: border-box;
   width: 100%;
   text-align: center;
+}
+
+#header {
+  padding: 0 20px;
+}
+
+.navbar-dropdown {
+  display: none; 
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  width: 110px;
+  box-shadow: 0 0 4px 0px #787878;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background: white;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  height: 50px;
+  padding: 10px;
+}
+
+.navbar-dropdown-active {
+  display: flex;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

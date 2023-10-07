@@ -1,18 +1,17 @@
-import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
+  let isPostMode = true;
   let imageUrl = "";
 
   const render = () => {
-    // TODO: Реализовать страницу добавления поста
     const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>
       <div class="form">
         <h3 class="form-title">Добавить пост</h3>
         <div class="form-inputs">
-          <div class="upload-image-container">
+          <div id="upload-image" class="upload-image-container">
           </div>
           <label>
             Опишите фотографию:
@@ -38,11 +37,23 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       });
     }
 
-    renderHeaderComponent({
-      element: document.querySelector(".header-container"),
-    });
-
     document.getElementById("add-button").addEventListener("click", () => {
+
+      if (isPostMode) {
+        const description = document.getElementById("description").value;
+        const imageUrl = document.getElementById("upload-image").value;
+
+        if (!imageUrl) {
+          alert("Добавте картинку");
+          return;
+        }
+
+        if (!description) {
+          alert("Добавте описание");
+          return;
+        }
+      }
+
       onAddPostClick({
         description: descriptionText.value.replaceAll('<', '&lt;').replaceAll('>', '&gt; '),
         imageUrl,
