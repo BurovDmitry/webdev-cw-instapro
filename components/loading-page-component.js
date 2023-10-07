@@ -1,4 +1,4 @@
-export function renderLoadingPageComponent({ appEl, user, goToPage }) {
+export function renderLoadingPageComponent({ appEl, }) {
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>

@@ -27,7 +27,6 @@ export function renderHeaderComponent() {
         </div>`
       : ""
     }  
-  
 `;
 
   headerComponent
