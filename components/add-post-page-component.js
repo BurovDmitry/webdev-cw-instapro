@@ -41,7 +41,6 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
       if (isPostMode) {
         const description = document.getElementById("description").value;
-        const imageUrl = document.getElementById("upload-image").value;
 
         if (!imageUrl) {
           alert("Добавте картинку");
