@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { addPost, dislikePost, getPosts, getUserPosts, likePost } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -10,11 +10,13 @@ import {
 } from "./routes.js";
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
+import { renderUserPostsPageComponent } from './components/user-posts-page-component.js';
 import {
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { renderHeaderComponent } from "./components/header-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
@@ -29,11 +31,9 @@ export const logout = () => {
   user = null;
   removeUserFromLocalStorage();
   goToPage(POSTS_PAGE);
+  renderHeaderComponent();
 };
 
-/**
- * Включает страницу приложения
- */
 export const goToPage = (newPage, data) => {
   if (
     [
@@ -45,7 +45,6 @@ export const goToPage = (newPage, data) => {
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
-      // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
       page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
       return renderApp();
     }
@@ -67,11 +66,19 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === USER_POSTS_PAGE) {
-      // TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      page = LOADING_PAGE;
+      renderApp();
+
+      return getUserPosts({ token: getToken(), userId: data.userId })
+        .then((newPosts) => {
+          page = USER_POSTS_PAGE;
+          posts = newPosts;
+          renderApp();
+        })
+        .catch((error) => {
+          console.error(error);
+          goToPage(USER_POSTS_PAGE);
+        });
     }
 
     page = newPage;
@@ -100,6 +107,7 @@ const renderApp = () => {
         user = newUser;
         saveUserToLocalStorage(user);
         goToPage(POSTS_PAGE);
+        renderHeaderComponent();
       },
       user,
       goToPage,
@@ -110,24 +118,41 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
-      },
+        return addPost(getToken(), { description, imageUrl }).then(
+          () => {
+            goToPage(POSTS_PAGE);
+          }
+        );
+      }
     });
   }
 
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
+      onLikePostClick({ postId }) {
+        return likePost(getToken(), { postId });
+      },
+      onDislikePostClick({ postId }) {
+        return dislikePost(getToken(), { postId });
+      },
     });
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    return renderUserPostsPageComponent({
+      appEl,
+      onLikePostClick({ postId }) {
+        return likePost(getToken(), { postId });
+      },
+      onDislikePostClick({ postId }) {
+        return dislikePost(getToken(), { postId });
+      },
+    });
   }
 };
-
+renderHeaderComponent();
 goToPage(POSTS_PAGE);
+
+
+

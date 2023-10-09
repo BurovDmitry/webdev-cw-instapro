@@ -2,48 +2,44 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { posts, goToPage, user } from "../index.js";
 import { mapPosts } from "../helpers/map-posts.js";
 
-export function renderPostsPageComponent({ appEl, onLikePostClick, onDislikePostClick }) {
+export function renderUserPostsPageComponent({ appEl, onLikePostClick, onDislikePostClick }) {
 
   function render() {
     const mappedPost = mapPosts(posts)
-    const postsHtml = mappedPost
-      .map((post, index) => {
-        return `<li class="post">
-    <div class="post-header" data-user-id="${post.user.id}">
-        <img src="${post.user.imageUrl}" class="post-header__user-image">
-        <p class="post-header__user-name">${post.user.name}</p>
-    </div>
-    <div class="post-image-container">
-      <img class="post-image" src="${post.imageUrl}">
-    </div>
-    <div class="post-likes">
-      <button data-index="${index}" data-post-id="${post.id
-          }" class="like-button">
-        <img src="./assets/images/like${post.isLiked ? "" : "-not"}-active.svg">
-      </button>
-      <p class="post-likes-text">
-         Нравится: <strong>${post.likeText}</strong>
-      </p>
-    </div>
-    <p class="post-text">
-      <span class="user-name">${post.user.name}</span>
-      ${post.description}
-    </p>
-    <p class="post-date">
-      ${post.createdAt} назад
-    </p>
-  </li>`;
-      })
-      .join("");
+    const postsHtml = mappedPost.map((post, index) => {
+      return `
+      <li class="post">
+        <div class="post-image-container">
+          <img class="post-image" src="${post.imageUrl}" />
+        </div>
+        <div class="post-likes">
+          <button data-index="${index}" data-post-id="${post.id}" class="like-button">
+            <img src="./assets/images/like${post.isLiked ? "" : "-not"}-active.svg">
+          </button>
+          <p class="post-likes-text">Нравится: <strong>${post.likeText}</strong></p>
+        </div>
+        <p class="post-text">
+          <span class="user-name">${post.user.name}</span>
+          ${post.description}
+        </p>
+        <p class="post-date"> ${post.createdAt} назад</p>
+      </li>`})
+      .join('')
 
     const appHtml = `
                 <div class="page-container">
                   <div class="header-container"></div>
+                  <div class="posts-user-header">
+                      <img src="${mappedPost[0].user.imageUrl}" class="posts-user-header__user-image">
+                      <p class="posts-user-header__user-name">${mappedPost[0].user.name}</p>
+                  </div>
                   <ul class="posts">
                    ${postsHtml}
                   </ul>
                 </div>`;
 
+
+    console.log(user);
     appEl.innerHTML = appHtml;
 
     for (let userEl of document.querySelectorAll(".post-header")) {
@@ -70,7 +66,6 @@ export function renderPostsPageComponent({ appEl, onLikePostClick, onDislikePost
           }
 
           promise.then((post) => {
-            console.log('post', post)
             posts[index] = post.post;
             render();
           })
@@ -78,6 +73,5 @@ export function renderPostsPageComponent({ appEl, onLikePostClick, onDislikePost
       }
     }
   }
-
   render();
 }
